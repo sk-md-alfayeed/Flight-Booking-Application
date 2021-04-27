@@ -1,0 +1,17 @@
+server:
+   port: 8081
+spring:
+   application:
+      name: flight-management
+   data:
+      mongodb:
+         uri: mongodb+srv://alfayeed:abcd1234@cluster0.8nm7y.mongodb.net/flight_booking_system
+   datasource:
+      driverClassName: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/flightauth
+      username: root
+      password: password
+   jpa:
+      hibernate.ddl-auto: update
+      generate-ddl: true
+      show-sql: true

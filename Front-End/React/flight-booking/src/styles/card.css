@@ -1,0 +1,653 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+.card {
+  background-color: dodgerblue;
+  color: white;
+  padding: 1rem;
+  height: 4rem;
+}
+
+.cards {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.cardsFlight {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.cardsFlightMain {
+  /* max-width: 800px; */
+  /* margin: 0 auto; */
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.row {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+/* Main Card */
+.containerCard {
+  margin-bottom: 20px;
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 1000px;
+  min-height: 150px;
+  /* background: linear-gradient(to right bottom, #413e32, #061018); */
+  color: white;
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.15);
+
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(30px);
+}
+
+.containerCard p {
+  opacity: 0.6;
+}
+.containerCard span {
+  opacity: 0.6;
+}
+
+.containerCard h3 {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.upper {
+  min-height: 100%;
+  max-width: 100%;
+  padding: 20px;
+  /* padding-left: 65px; */
+  /* background: linear-gradient(to right bottom, #2999f5, #1859d1); */
+  overflow: hidden;
+}
+
+.upper h3 svg {
+  height: 16px;
+  width: 16px;
+  fill: white;
+  margin-left: 10px;
+  padding-top: 4px;
+}
+
+.lower {
+  padding: 40px;
+}
+
+.lower h4 {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #2999f5;
+}
+
+.lower p:not(:first-child) {
+  margin-top: 40px;
+}
+
+div.expand {
+  height: 400px;
+}
+
+.wrapper {
+  min-height: 100px;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+/* Search Card */
+.containerCardSearch {
+  margin-top: 10%;
+  margin-bottom: 20px;
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 800px;
+  min-height: 250px;
+  /* background: linear-gradient(to right bottom, #323941, #061018); */
+  color: black;
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.15);
+
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+}
+
+.containerCardSearch p {
+  opacity: 0.6;
+  color: black;
+  padding-left: 15px;
+}
+
+.containerCardSearch h3 {
+  font-weight: 600;
+  font-size: 15px;
+  color: black;
+}
+
+.upperSearch {
+  min-height: 250px;
+  max-width: 100%;
+  padding: 20px;
+  padding-left: 50px;
+  padding-right: 50px;
+  color: black;
+  background-color: rgb(253, 253, 253);
+  /* background: linear-gradient(to right bottom, #ffffff, #ffffff); */
+}
+
+.upperSearch h3 svg {
+  height: 16px;
+  width: 16px;
+  fill: white;
+  margin-left: 10px;
+  padding-top: 4px;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+/* CheckIn Card */
+.containerCardCheckIn {
+  margin-top: 10%;
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 800px;
+  min-height: 180px;
+  /* background: linear-gradient(to right bottom, #323941, #061018); */
+  color: black;
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.15);
+
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+}
+
+.containerCardCheckIn p {
+  opacity: 0.6;
+  color: black;
+}
+
+.containerCardCheckIn h3 {
+  font-weight: 600;
+  font-size: 15px;
+  color: black;
+}
+
+.upperCheckIn {
+  min-height: 180px;
+  max-width: 100%;
+  padding: 20px;
+  padding-left: 65px;
+  padding-right: 65px;
+  color: black;
+  background-color: rgb(253, 253, 253);
+  /* background: linear-gradient(to right bottom, #ffffff, #ffffff); */
+  overflow: hidden;
+}
+
+.upperCheckIn h3 svg {
+  height: 16px;
+  width: 16px;
+  fill: white;
+  margin-left: 10px;
+  padding-top: 4px;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+/* Flight Update */
+.containerFM {
+  margin-bottom: 20px;
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 1200px;
+  min-height: 270px;
+  /* background: linear-gradient(to right bottom, #323941, #061018); */
+  color: rgb(255, 255, 255);
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.15);
+
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+}
+
+.containerFM p {
+  opacity: 0.6;
+  padding-left: 15px;
+}
+
+.containerFM h3 {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.upperFM {
+  min-height: 270px;
+  max-width: 100%;
+  padding: 30px;
+  /* padding-left: 65px;
+  padding-right: 65px; */
+  overflow: hidden;
+
+  /* background: linear-gradient(to right bottom, #37a5ff, #00266e); */
+  /* background-color: rgb(253, 253, 253); */
+}
+
+.upperFM h3 svg {
+  height: 16px;
+  width: 16px;
+  fill: white;
+  margin-left: 10px;
+  padding-top: 4px;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+/* Booking Manage*/
+.containerBM {
+  margin-bottom: 20px;
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 1200px;
+  min-height: 270px;
+  /* background: linear-gradient(to right bottom, #323941, #061018); */
+  color: rgb(255, 255, 255);
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.15);
+
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+}
+
+.containerBM p,
+label {
+  opacity: 0.6;
+}
+
+.containerBM h3 {
+  font-weight: 600;
+  font-size: 15px;
+}
+.containerBM h6 {
+  padding-left: 15px;
+}
+
+.upperBM {
+  min-height: 270px;
+  max-width: 100%;
+  padding: 30px;
+  /* padding-left: 65px;
+  padding-right: 65px; */
+  overflow: hidden;
+
+  /* background: linear-gradient(to right bottom, #37a5ff, #00266e); */
+  /* background-color: rgb(253, 253, 253); */
+}
+
+.upperBM h3 svg {
+  height: 16px;
+  width: 16px;
+  fill: white;
+  margin-left: 10px;
+  padding-top: 4px;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+/* Flight Add*/
+
+.containerAF {
+  margin-bottom: 50px;
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 1200px;
+  min-height: 250px;
+  /* background: linear-gradient(to right bottom, #323941, #061018); */
+  color: rgb(0, 0, 0);
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+
+.containerAF p {
+  opacity: 0.6;
+}
+
+.containerAF h3 {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.upperAF {
+  min-height: 250px;
+  max-width: 100%;
+  padding: 30px;
+  /* padding-left: 50px;
+  padding-right: 50px; */
+  background-color: rgb(253, 253, 253);
+  overflow: hidden;
+  /* background: linear-gradient(to right bottom, #568a6a, #00266e); */
+}
+
+.upperAF h3 svg {
+  height: 16px;
+  width: 16px;
+  fill: white;
+  margin-left: 10px;
+  padding-top: 4px;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+/* Fare Update*/
+
+.containerFareU {
+  margin-bottom: 20px;
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 1200px;
+  min-height: 120px;
+  /* background: linear-gradient(to right bottom, #323941, #061018); */
+  color: rgb(255, 255, 255);
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.15);
+
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+}
+
+.containerFareU p {
+  opacity: 0.6;
+  padding-left: 15px;
+  margin: auto;
+}
+
+.containerFareU h3 {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.upperFareU {
+  min-height: 120px;
+  max-width: 100%;
+  padding: 30px;
+  /* padding-left: 65px;
+  padding-right: 65px; */
+  overflow: hidden;
+  /* background: linear-gradient(to right bottom, #37a5ff, #00266e); */
+  /* background-color: rgb(253, 253, 253); */
+}
+
+.upperFareU h3 svg {
+  height: 16px;
+  width: 16px;
+  fill: white;
+  margin-left: 10px;
+  padding-top: 4px;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+/* Passenger Add*/
+
+.containerPassenger {
+  margin-bottom: 50px;
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 1200px;
+  min-height: 100px;
+  /* background: linear-gradient(to right bottom, #323941, #061018); */
+  color: rgb(0, 0, 0);
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+
+.containerPassenger p {
+  opacity: 0.6;
+}
+
+.containerPassenger h3 {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.upperPassenger {
+  min-height: 100px;
+  max-width: 100%;
+  padding: 30px;
+  /* padding-left: 50px;
+  padding-right: 50px; */
+  background-color: rgb(253, 253, 253);
+  overflow: hidden;
+  /* background: linear-gradient(to right bottom, #568a6a, #00266e); */
+}
+
+.upperPassenger h3 svg {
+  height: 16px;
+  width: 16px;
+  fill: white;
+  margin-left: 10px;
+  padding-top: 4px;
+}
+/* ---------------------------------------------------------------------------------------- */
+
+.containerAck {
+  margin-top: 10%;
+  margin-bottom: 50px;
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 1000px;
+  min-height: 100px;
+  /* background: linear-gradient(to right bottom, #323941, #061018); */
+  color: rgb(0, 0, 0);
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+
+.containerAck p {
+  opacity: 0.6;
+}
+
+.containerAck h3 {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.upperAck {
+  min-height: 100px;
+  max-width: 100%;
+  padding: 30px;
+  /* padding-left: 50px;
+  padding-right: 50px; */
+  background-color: rgb(253, 253, 253);
+  overflow: hidden;
+  /* background: linear-gradient(to right bottom, #568a6a, #00266e); */
+}
+
+.upperAck h3 svg {
+  height: 16px;
+  width: 16px;
+  fill: white;
+  margin-left: 10px;
+  padding-top: 4px;
+}
+/* ---------------------------------------------------------------------------------------- */
+/* Passenger Add*/
+
+.containerPassengerCheckIn {
+  margin-bottom: 5px;
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 1200px;
+  min-height: 100px;
+  /* background: linear-gradient(to right bottom, #323941, #061018); */
+  color: rgb(0, 0, 0);
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+
+.containerPassengerCheckIn p {
+  opacity: 0.6;
+}
+
+.containerPassengerCheckIn h3 {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.upperPassengerCheckIn {
+  min-height: 100px;
+  max-width: 100%;
+  padding: 30px;
+  /* padding-left: 50px;
+  padding-right: 50px; */
+  background-color: rgb(253, 253, 253);
+  overflow: hidden;
+  /* background: linear-gradient(to right bottom, #568a6a, #00266e); */
+}
+
+.upperPassengerCheckIn h3 svg {
+  height: 16px;
+  width: 16px;
+  fill: white;
+  margin-left: 10px;
+  padding-top: 4px;
+}
+/* ---------------------------------------------------------------------------------------- */
+#update {
+  background-color: rgb(255, 239, 187);
+}
+
+#delete {
+  background-color: rgb(243, 174, 70);
+}
+
+#add {
+  background-color: rgb(126, 165, 255);
+}
+
+#cancel {
+  background-color: rgb(191, 255, 163);
+}
+
+#search {
+  background-color: hsl(0, 0%, 91%);
+}
+
+#danger {
+  background-color: hsl(0, 91%, 68%);
+}
+
+.containerAir {
+  position: relative;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 400px;
+  min-height: 10px;
+  /* background: linear-gradient(to right bottom, #323941, #061018); */
+  color: rgb(0, 0, 0);
+  transition: all 300ms ease-in-out;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+
+.upperAir {
+  min-height: 100px;
+  max-width: 100%;
+  padding: 30px;
+  /* padding-left: 50px;
+  padding-right: 50px; */
+  background-color: rgb(253, 253, 253);
+  overflow: hidden;
+  /* background: linear-gradient(to right bottom, #568a6a, #00266e); */
+}

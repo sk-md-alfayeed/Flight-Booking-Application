@@ -1,0 +1,23 @@
+spring:
+   application:
+      name: config-server
+   cloud:
+      config:
+         server:
+            git:
+               default-label: main
+               uri: https://github.com/sk-md-alfayeed/flight-config-server
+server:
+   port: 9191
+eureka:
+   client:
+      register-with-eureka: true
+      fetch-registry: true
+      service-url:
+         defaultZone: http://localhost:8761/eureka/
+   instance:
+      hostname: localhost
+      
+      
+      
+      
