@@ -6,7 +6,7 @@ Flight Booking Application - Spring Boot, Node.js, JWT, React, MongoDB, MySQL, R
 </div>
 
 
-  <img src='./Source/Images/Diagram.png'>
+  <img src='./Source/Images/Diagram.jpeg'>
 
 </div>
 
@@ -152,15 +152,33 @@ Flight Booking Application - Spring Boot, Node.js, JWT, React, MongoDB, MySQL, R
 
 <div>
 
+<h2 style="color: #323dfa; font-weight:500"> Add Flights </h2>
+
+  <img src='./Source/Images/11.AddFlights.png'>
+
+</div>
+
+<div>
+
+<h2 style="color: #323dfa; font-weight:500"> Validation </h2>
+
+  <img src='./Source/Images/12.Validation.png'>
+
+</div>
+
+
+
+<div>
+
 <h2 style="color: #323dfa; font-weight:500"> Fare Manage </h2>
 
-  <img src='./Source/Images/11.AdminFares.png'>
+  <img src='./Source/Images/13.AdminFares.png'>
 
 </div>
 
 <h2 style="color: #323dfa; font-weight:500"> Booking Manage </h2>
 
-  <img src='./Source/Images/12.AdminBookings.png'>
+  <img src='./Source/Images/14.AdminBookings.png'>
 
 </div>
 
