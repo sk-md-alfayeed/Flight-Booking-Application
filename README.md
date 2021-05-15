@@ -24,11 +24,11 @@ Flight Booking Application - Spring Boot, Node.js, JWT, React, MongoDB, MySQL, R
 ## Folder Structure
 
 - Back-End
-- - Spring Boot
-- - Node.js
+  - Spring Boot
+  - Node.js
 
 - Front-End
-- - React
+  - React
 
 
 ## Project Initialization
