@@ -3,9 +3,11 @@ package com.cg.casestudy.checkinmanagement.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cg.casestudy.checkinmanagement.config.RabbitMQConfig;
 import com.cg.casestudy.checkinmanagement.exception.CheckInNotFoundException;
 import com.cg.casestudy.checkinmanagement.exception.IdNotFoundException;
 import com.cg.casestudy.checkinmanagement.model.CheckIn;
@@ -14,6 +16,9 @@ import com.cg.casestudy.checkinmanagement.repository.CheckInManagementRepository
 
 @Service
 public class CheckInManagementServiceImpl implements CheckInManagementService {
+	
+	@Autowired
+	RabbitTemplate rabbitTemplate;
 
 	@Autowired
 	CheckInManagementRepository checkInManagementRepository;
@@ -50,15 +55,20 @@ public class CheckInManagementServiceImpl implements CheckInManagementService {
 	// Adding 'CheckIn' to database using CheckInCheckInReopsitory
 	@Override
 	public void addCheckIn(CheckIn checkIn) {
+		// Producer
+		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.POST_ROUTING_KEY, checkIn);
 	
-		checkInManagementRepository.save(checkIn);
+//		checkInManagementRepository.save(checkIn);
 	}
 
 	// Updating 'CheckIn' in database using CheckInReopsitory
 	@Override
 	public void updateCheckIn(CheckIn checkIn) {
+		
+		// Producer
+		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.PUT_ROUTING_KEY, checkIn);
 	
-		checkInManagementRepository.save(checkIn);
+//		checkInManagementRepository.save(checkIn);
 	}
 
 	// Deleting 'CheckIn' by Id in database using CheckInReopsitory
@@ -67,7 +77,10 @@ public class CheckInManagementServiceImpl implements CheckInManagementService {
 
 		if (checkInManagementRepository.existsById(id)) {
 			
-			checkInManagementRepository.deleteById(id);
+			// Producer
+			rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.DELETE_ROUTING_KEY, id);
+			
+//			checkInManagementRepository.deleteById(id);
 			return "CheckIn Deleted with Id : " + id;
 		} else {
 			throw new IdNotFoundException("Id not exist");

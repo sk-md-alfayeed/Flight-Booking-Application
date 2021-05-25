@@ -1,5 +1,5 @@
 # Flight-Booking-Application
-Flight Booking Application - Spring Boot, Node.js, JWT, React, MongoDB, MySQL, Razorpay
+Flight Booking Application - Spring Boot, Node.js, JWT, React, MongoDB, MySQL, RabbitMQ, Razorpay
 
 
 ## Overview
@@ -19,7 +19,8 @@ Flight Booking Application - Spring Boot, Node.js, JWT, React, MongoDB, MySQL, R
 - React
 - MongoDB
 - MySQL
-- Extras (JWT Security, Razorpay Payment Gateway )
+- RabbitMQ (for POST, PUT, DELETE requests in Spring Boot)
+- Extras (JWT Security, Razorpay Payment Gateway)
 
 ## Folder Structure
 

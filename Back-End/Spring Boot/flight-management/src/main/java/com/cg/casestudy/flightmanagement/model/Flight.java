@@ -1,5 +1,7 @@
 package com.cg.casestudy.flightmanagement.model;
 
+import java.io.Serializable;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -14,9 +16,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "flights")
-public class Flight {
 
+@Document(collection = "flights")
+public class Flight implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@NotEmpty(message = "flightId must not be empty")
 	private String id;

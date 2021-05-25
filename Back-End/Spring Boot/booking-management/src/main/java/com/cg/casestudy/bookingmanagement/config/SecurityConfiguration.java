@@ -50,7 +50,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/booking/deleteBooking",
 						"/booking/allBookings")
 				.hasAnyRole("ADMIN").antMatchers("/booking/getBookingsByEmail/**", "/booking/getFlight/**","/booking/addBooking","/booking/updateBooking")
-				.hasAnyRole("ADMIN", "USER").antMatchers("/booking/authenticate").permitAll().anyRequest()
+				.hasAnyRole("ADMIN", "USER").antMatchers("/booking/authenticate", "/v2/api-docs",
+			            "/v3/api-docs",  
+			            "/swagger-resources/**", 
+			            "/swagger-ui/**").permitAll().anyRequest()
 				.authenticated().and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

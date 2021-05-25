@@ -1,48 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router";
 import validate from "../forms/LoginFormValidation";
 import useForm from "../forms/useForm";
 
 function Login() {
-  const { values, errors, handleChange, handleSubmit } = useForm(
-    callback,
-    validate
-  );
   const history = useHistory();
-
-  function callback() {}
-
-  useEffect(() => {
-    if (
-      localStorage.getItem("token") === null ||
-      localStorage.getItem("token") === undefined
-    ) {
-      axios
-        .get("http://localhost:3001/login")
-        .then((response) => {
-          if (response.data.loggedIn === true) {
-            history.push("/home");
-          } else {
-            history.push("/login");
-          }
-        })
-        .catch((error) => console.error(`Error :  ${error}`));
-    } else {
-      history.push("/home");
-    }
-  }, [history]);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const generateLogin = () => {
-    if (Object.keys(errors).length === 0) {
-      const log = {
-        username: values.username,
-        password: values.password,
-      };
-      console.log(errors);
-      login(log);
-    }
+    const log = {
+      username: values.username,
+      password: values.password,
+    };
+
+    login(log);
   };
+
+  const { values, errors, handleChange, handleSubmit } = useForm(
+    generateLogin,
+    validate
+  );
 
   const login = (log) => {
     //calling getToken to get Jwt backEndToken from Back-End
@@ -54,6 +32,7 @@ function Login() {
       })
       .then((response) => {
         if (!response.data.auth) {
+          setIsLoggedIn(false);
           history.push("/login");
         } else {
           getTokens();
@@ -126,6 +105,26 @@ function Login() {
       });
   };
 
+  useEffect(() => {
+    if (
+      localStorage.getItem("token") === null ||
+      localStorage.getItem("token") === undefined
+    ) {
+      axios
+        .get("http://localhost:3001/login")
+        .then((response) => {
+          if (response.data.loggedIn === true) {
+            history.push("/home");
+          } else {
+            history.push("/login");
+          }
+        })
+        .catch((error) => console.error(`Error :  ${error}`));
+    } else {
+      history.push("/home");
+    }
+  }, [history]);
+
   return (
     <div className="section is-fullheight">
       <div className="container">
@@ -165,10 +164,14 @@ function Login() {
                   <p className="help is-danger">{errors.password}</p>
                 )}
               </div>
+              {!isLoggedIn && (
+                <p className="help is-danger">
+                  {"Username/Password does not match"}
+                </p>
+              )}
               <button
                 type="submit"
                 className="button is-block is-info is-fullwidth"
-                onClick={generateLogin}
               >
                 Login
               </button>

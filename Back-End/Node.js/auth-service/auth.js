@@ -77,7 +77,12 @@ app.post("/register", (req, res) => {
       "INSERT INTO users (fullname, username, email, password, role) VALUES (?,?,?,?,?)",
       [fullname, username, email, hash, role],
       (err, result) => {
-        console.log("User added with username : " + req.body.username);
+        if (err) {
+          res.send({ err: err });
+        } else {
+          res.send({ result: result });
+          console.log("User added with username : " + req.body.username);
+        }
       }
     );
   });
@@ -114,9 +119,10 @@ app.get("/login", (req, res) => {
 
 app.post("/user", (req, res) => {
   const username = req.body.username;
+  const email = req.body.email;
   db.query(
-    "SELECT * FROM users WHERE username = ?;",
-    username,
+    "SELECT * FROM users WHERE username = ? OR email = ?;",
+    [username, email],
     (err, result) => {
       if (err) {
         res.send({ err: err });

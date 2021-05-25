@@ -48,7 +48,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.cors();
 		http.csrf().disable().authorizeRequests()
 				.antMatchers("/fare/addFare", "/fare/updateFare", "/fare/deleteFare").hasAnyRole("ADMIN")
-				.antMatchers("/fare/authenticate", "/fare/fares", "/fare/allFares", "/fare/getFare/**")
+				.antMatchers("/fare/authenticate", "/fare/fares", "/fare/allFares", "/fare/getFare/**", "/v2/api-docs",
+			            "/v3/api-docs",  
+			            "/swagger-resources/**", 
+			            "/swagger-ui/**")
 				.permitAll().anyRequest().authenticated().and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

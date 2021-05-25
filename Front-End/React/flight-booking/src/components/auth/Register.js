@@ -5,34 +5,30 @@ import useForm from "../forms/useForm";
 import { useHistory } from "react-router";
 
 function Reg() {
-  const { values, errors, handleChange, handleSubmit } = useForm(
-    callback,
-    validate
-  );
   const history = useHistory();
   const [isRegistered, setIsRegistered] = useState(false);
-
-  function callback() {
-    setIsRegistered(true);
-  }
+  const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
 
   const generateRegister = () => {
-    if (Object.keys(errors).length === 0) {
-      const reg = {
-        fullname: values.fullname,
-        username: values.username,
-        email: values.email,
-        password: values.password,
-      };
-      console.log(errors);
-      register(reg);
-    }
+    const reg = {
+      fullname: values.fullname,
+      username: values.username,
+      email: values.email,
+      password: values.password,
+    };
+    register(reg);
   };
+
+  const { values, errors, handleChange, handleSubmit } = useForm(
+    generateRegister,
+    validate
+  );
 
   const register = (reg) => {
     axios
       .post("http://localhost:3001/user", {
         username: reg.username,
+        email: reg.email,
       })
       .then((res) => {
         console.log(res);
@@ -45,13 +41,19 @@ function Reg() {
               password: reg.password,
             })
             .then((response) => {
+              console.log(response);
+              setIsRegistered(true);
+              setIsAlreadyRegistered(false);
               history.push("/register");
             })
             .catch((error) => {
               console.log(error);
             });
+        } else {
+          setIsRegistered(false);
+          setIsAlreadyRegistered(true);
+          history.push("/register");
         }
-        // history.push("/register");
       })
       .catch((error) => {
         console.log(error);
@@ -65,13 +67,18 @@ function Reg() {
     >
       <div className="container">
         <div className="column is-4 is-offset-4">
-          {isRegistered !== false ? (
-            <div>
-              <p className="help is-white">You have successfully registered.</p>
-            </div>
-          ) : null}
           <div className="box">
             <form onSubmit={handleSubmit} noValidate>
+              {isRegistered && (
+                <p className="help is-success font-weight-bold">
+                  {"User successfully registered"}
+                </p>
+              )}
+              {isAlreadyRegistered && (
+                <p className="help is-danger font-weight-bold">
+                  {"User already registered"}
+                </p>
+              )}
               <div className="field">
                 <label className="label">Fullname</label>
                 <div className="control">
@@ -142,7 +149,6 @@ function Reg() {
               <button
                 type="submit"
                 className="button is-block is-info is-fullwidth"
-                onClick={generateRegister}
               >
                 Signup
               </button>

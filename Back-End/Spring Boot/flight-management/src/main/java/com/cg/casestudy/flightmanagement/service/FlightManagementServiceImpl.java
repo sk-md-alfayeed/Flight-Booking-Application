@@ -3,6 +3,7 @@ package com.cg.casestudy.flightmanagement.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Lazy;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.cg.casestudy.flightmanagement.config.RabbitMQConfig;
 import com.cg.casestudy.flightmanagement.exception.FlightNotFoundException;
 import com.cg.casestudy.flightmanagement.exception.IdNotFoundException;
 import com.cg.casestudy.flightmanagement.model.AuthRequest;
@@ -24,6 +26,9 @@ import com.cg.casestudy.flightmanagement.repository.FlightManagementRepository;
 @Service
 @RefreshScope
 public class FlightManagementServiceImpl implements FlightManagementService {
+
+	@Autowired
+	RabbitTemplate rabbitTemplate;
 
 	@Autowired
 	private FlightManagementRepository flightManagementRepository;
@@ -79,7 +84,11 @@ public class FlightManagementServiceImpl implements FlightManagementService {
 
 		Fare fare = new Fare(flight.getId(), flight.getAirline().getAirlineName(), 3000);
 		flight.setFare(fare);
-		flightManagementRepository.save(flight);
+
+		// Producer
+		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.POST_ROUTING_KEY, flight);
+
+//		flightManagementRepository.save(flight);
 		try {
 
 			// Request for authentication and getting the authorization token
@@ -106,35 +115,45 @@ public class FlightManagementServiceImpl implements FlightManagementService {
 	@Override
 	public String updateFlight(Flight flight) {
 
-		flightManagementRepository.save(flight);
+		// Producer
+		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.PUT_ROUTING_KEY, flight);
+
+//		flightManagementRepository.save(flight);
+
 		return "Flight updated with id : " + flight.getId();
 	}
 
 	// Deleting the Flight
 	@Override
 	public String deleteFlight(String flightId) {
+		if (flightManagementRepository.existsById(flightId)) {
 
-		flightManagementRepository.deleteById(flightId);
-		try {
-			// Request for authentication and getting the authorization token
-			String tokenDeleteFare = restTemplate.postForObject("http://fare-management/fare/authenticate", auth,
-					String.class);
+			// Producer
+			rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.DELETE_ROUTING_KEY, flightId);
 
-			// Creating Header with token
-			HttpHeaders headersDeleteFare = new HttpHeaders();
-			headersDeleteFare.setContentType(MediaType.APPLICATION_JSON);
-			headersDeleteFare.set("Authorization", "Bearer " + tokenDeleteFare);
-			// Creating Http Entity
-			HttpEntity<?> entityDeleteFare = new HttpEntity<>(headersDeleteFare);
+//			flightManagementRepository.deleteById(flightId);
 
-			restTemplate.exchange("http://fare-management/fare" + "/deleteFare/" + flightId, HttpMethod.DELETE,
-					entityDeleteFare, String.class);
+			try {
+				// Request for authentication and getting the authorization token
+				String tokenDeleteFare = restTemplate.postForObject("http://fare-management/fare/authenticate", auth,
+						String.class);
 
-			return "Flight and Fare deleted with Flight Id : " + flightId;
-		} catch (Exception e) {
-			return "Fare not delete because of " + e + ", but Flight deleted with Flight Id : " + flightId;
+				// Creating Header with token
+				HttpHeaders headersDeleteFare = new HttpHeaders();
+				headersDeleteFare.setContentType(MediaType.APPLICATION_JSON);
+				headersDeleteFare.set("Authorization", "Bearer " + tokenDeleteFare);
+				// Creating Http Entity
+				HttpEntity<?> entityDeleteFare = new HttpEntity<>(headersDeleteFare);
+
+				restTemplate.exchange("http://fare-management/fare" + "/deleteFare/" + flightId, HttpMethod.DELETE,
+						entityDeleteFare, String.class);
+
+				return "Flight and Fare deleted with Flight Id : " + flightId;
+			} catch (Exception e) {
+				return "Fare not deleted because of " + e + ", but Flight deleted with Flight Id : " + flightId;
+			}
+		} else {
+			throw new IdNotFoundException("Id not exist");
 		}
-
 	}
-
 }

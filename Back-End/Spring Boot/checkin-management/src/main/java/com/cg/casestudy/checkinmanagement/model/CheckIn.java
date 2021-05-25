@@ -1,5 +1,6 @@
 package com.cg.casestudy.checkinmanagement.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
@@ -15,7 +16,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "checkIns")
-public class CheckIn {
+public class CheckIn implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@NotEmpty(message = "id must not be empty")
 	private String id;

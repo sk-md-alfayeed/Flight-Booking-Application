@@ -55,7 +55,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						"/flight/airport/deleteAirport")
 				.hasAnyRole("ADMIN")
 				.antMatchers("/flight/authenticate", "/flight/flights", "/flight/allFlights", "/flight/getFlight/**", "/flight/airline/allAirlines",
-						"/flight/airport/allAirports")
+						"/flight/airport/allAirports", "/v2/api-docs",
+			            "/v3/api-docs",  
+			            "/swagger-resources/**", 
+			            "/swagger-ui/**")
 				.permitAll().anyRequest().authenticated().and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

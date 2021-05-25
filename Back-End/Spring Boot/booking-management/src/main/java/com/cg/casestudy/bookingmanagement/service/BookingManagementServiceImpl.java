@@ -3,6 +3,7 @@ package com.cg.casestudy.bookingmanagement.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.cg.casestudy.bookingmanagement.config.RabbitMQConfig;
 import com.cg.casestudy.bookingmanagement.exception.BookingNotFoundException;
 import com.cg.casestudy.bookingmanagement.exception.IdNotFoundException;
 import com.cg.casestudy.bookingmanagement.model.AuthRequest;
@@ -25,6 +27,9 @@ public class BookingManagementServiceImpl implements BookingManagementService {
 
 	// Creating AuthRequest object
 	AuthRequest auth = new AuthRequest("admin", "1234");
+
+	@Autowired
+	RabbitTemplate rabbitTemplate;
 
 	@Autowired
 	private BookingManagementRepository bookingManagementRepository;
@@ -92,17 +97,20 @@ public class BookingManagementServiceImpl implements BookingManagementService {
 	// Adding 'Booking' to database using BookingManagementReopsitory
 	@Override
 	public String addBooking(Booking booking) {
-		
+
 		CheckIn checkIn = new CheckIn(booking.getId(), booking.getPnrNo(), booking.getEmail(),
 				booking.getPassengerList());
-		
+
 		Flight flight = booking.getFlight();
 		flight.setSeats(flight.getSeats() - booking.getPassengerList().size());
 		System.out.println(flight);
-		
+
 		booking.setFlight(flight);
-		
-		bookingManagementRepository.save(booking);
+
+		// Producer
+		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.POST_ROUTING_KEY, booking);
+
+//		bookingManagementRepository.save(booking);
 
 		try {
 			// Request for authentication and getting the authorization token
@@ -120,12 +128,9 @@ public class BookingManagementServiceImpl implements BookingManagementService {
 
 			restTemplate.exchange("http://flight-management/flight" + "/updateFlight", HttpMethod.PUT,
 					entityUpdateFlight, String.class);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println("Unable to add flight because of [" + e + "]");
 		}
-		
-		
-		
 
 		try {
 
@@ -155,7 +160,11 @@ public class BookingManagementServiceImpl implements BookingManagementService {
 	// Updating 'Booking' to database using BookingManagementReopsitory
 	@Override
 	public String updateBooking(Booking booking) {
-		bookingManagementRepository.save(booking);
+		
+		// Producer
+				rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.PUT_ROUTING_KEY, booking);
+				
+//		bookingManagementRepository.save(booking);
 
 		CheckIn checkIn = new CheckIn(booking.getId(), booking.getPnrNo(), booking.getEmail(),
 				booking.getPassengerList());
@@ -189,7 +198,11 @@ public class BookingManagementServiceImpl implements BookingManagementService {
 	@Override
 	public String deleteBooking(String bookingId) {
 		if (bookingManagementRepository.existsById(bookingId)) {
-			bookingManagementRepository.deleteById(bookingId);
+			
+			// Producer
+			rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.DELETE_ROUTING_KEY, bookingId);
+			
+//			bookingManagementRepository.deleteById(bookingId);
 			try {
 
 				// Request for authentication and getting the authorization token

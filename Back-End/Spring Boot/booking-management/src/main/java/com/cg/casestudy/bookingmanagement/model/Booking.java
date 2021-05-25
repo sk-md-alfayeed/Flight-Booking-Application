@@ -1,5 +1,6 @@
 package com.cg.casestudy.bookingmanagement.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,8 +18,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "bookings")
-public class Booking {
+public class Booking implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@NotEmpty(message = "id must not be empty")
 	private String id;
@@ -34,6 +39,5 @@ public class Booking {
 	private boolean active;
 	@NotNull(message = "userId must not be empty")
 	private String email;
-	
 
 }

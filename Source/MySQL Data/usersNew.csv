@@ -1,0 +1,3 @@
+"id";"fullname";"username";"email";"password";"role"
+1;"Admin";"admin";"admin@cg.com";"$2b$10$iwNqdiuoME8mpvMSC.AjGONRhO4R/U0R3kxJ1L7I.DVP8hONj7ibS";"ADMIN"
+2;"Sk Md Alfayeed";"alfayeed";"alfayeed@cg.com";"$2b$10$Pliyr9yLDXa6Kl/74zE5CuhkjUWpy3e6XXgIpmEDtOP7f64j8kBiy";"USER"

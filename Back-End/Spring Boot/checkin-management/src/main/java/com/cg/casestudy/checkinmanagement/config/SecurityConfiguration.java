@@ -48,7 +48,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.cors();
 		http.csrf().disable().authorizeRequests()
 				.antMatchers("/checkin/updateCheckIn", "/checkin/deleteCheckIn", "/checkin/allCheckIns")
-				.hasAnyRole("ADMIN").antMatchers("/checkin/getCheckIn/**", "/checkin/addCheckIn", "/checkin/checkIns")
+				.hasAnyRole("ADMIN").antMatchers("/checkin/getCheckIn/**", "/checkin/addCheckIn", "/checkin/checkIns", "/v2/api-docs",
+			            "/v3/api-docs",  
+			            "/swagger-resources/**", 
+			            "/swagger-ui/**")
 				.hasAnyRole("ADMIN", "USER").antMatchers("/checkin/authenticate").permitAll().anyRequest()
 				.authenticated().and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
