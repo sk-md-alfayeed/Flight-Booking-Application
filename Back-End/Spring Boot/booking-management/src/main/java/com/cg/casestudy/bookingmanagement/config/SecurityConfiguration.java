@@ -49,7 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().authorizeRequests()
 				.antMatchers("/booking/deleteBooking",
 						"/booking/allBookings")
-				.hasAnyRole("ADMIN").antMatchers("/booking/getBookingsByEmail/**", "/booking/getFlight/**","/booking/addBooking","/booking/updateBooking")
+				.hasAnyRole("ADMIN").antMatchers("/booking/getBookingsByEmail/**", "/booking/getFlight/**","/booking/addBooking","/booking/updateBooking", "/booking/discount")
 				.hasAnyRole("ADMIN", "USER").antMatchers("/booking/authenticate", "/v2/api-docs",
 			            "/v3/api-docs",  
 			            "/swagger-resources/**", 

@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.cg.casestudy.flightmanagement.config.SecurityConfiguration;
 import com.cg.casestudy.flightmanagement.model.Airline;
 import com.cg.casestudy.flightmanagement.model.Airport;
 import com.cg.casestudy.flightmanagement.model.Fare;
@@ -25,8 +26,7 @@ import com.cg.casestudy.flightmanagement.model.Search;
 import com.cg.casestudy.flightmanagement.service.FlightManagementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-@WebMvcTest(FlightManagementController.class)
+@WebMvcTest(controllers = FlightManagementController.class, excludeAutoConfiguration = SecurityConfiguration.class)
 class FlightManagementControllerTest {
 
 	@Autowired
@@ -43,22 +43,22 @@ class FlightManagementControllerTest {
 	private Flight flight;
 
 	private Search search;
-	
 
 	@BeforeEach
 	void setUp() {
 
 		search = new Search("CCU", "DEL", "2021-04-30");
 
-		flights = List.of(
-				new Flight("CD105", new Airline("1", "AA105", "AirAlpha"), new Airport("1", "CCU", "Kolkata"),
-						new Airport("2", "DEL", "Delhi"), "2021-04-30", "2021-04-30", "22:20", "00:20",new Fare(), 100),
+		flights = List.of(new Flight("CD105", new Airline("1", "AA105", "AirAlpha"), new Airport("1", "CCU", "Kolkata"),
+				new Airport("2", "DEL", "Delhi"), "2021-04-30", "2021-04-30", "22:20", "00:20", new Fare(), 100),
 				new Flight("CD106", new Airline("1", "AA105", "AirAlpha"), new Airport("1", "CCU", "Kolkata"),
-						new Airport("2", "DEL", "Delhi"), "2021-04-30", "2021-04-30", "22:20", "00:20",new Fare(), 100),
+						new Airport("2", "DEL", "Delhi"), "2021-04-30", "2021-04-30", "22:20", "00:20", new Fare(),
+						100),
 				new Flight("CD107", new Airline("1", "AA105", "AirAlpha"), new Airport("1", "CCU", "Kolkata"),
-						new Airport("2", "DEL", "Delhi"), "2021-04-30", "2021-04-30", "22:20", "00:20",new Fare(), 100));
+						new Airport("2", "DEL", "Delhi"), "2021-04-30", "2021-04-30", "22:20", "00:20", new Fare(),
+						100));
 		flight = new Flight("CD107", new Airline("2", "AB109", "AirBravo"), new Airport("1", "CCU", "Kolkata"),
-				new Airport("2", "DEL", "Delhi"), "2021-04-30", "2021-04-30", "12:20", "02:20",new Fare(), 100);
+				new Airport("2", "DEL", "Delhi"), "2021-04-30", "2021-04-30", "12:20", "02:20", new Fare(), 100);
 	}
 
 	@Test

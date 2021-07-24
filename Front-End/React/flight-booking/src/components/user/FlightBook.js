@@ -1,107 +1,111 @@
-import axios from "axios";
-import React, { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
-import FlightService from "../../services/FlightService";
-import { Button } from "react-bootstrap";
+import axios from 'axios'
+import React, { useState, useEffect } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import FlightService from '../../services/FlightService'
+import { Button } from 'react-bootstrap'
 
-import validate from "../forms/PassengerFormValidation";
-import useForm from "../forms/useForm";
+import validate from '../forms/PassengerFormValidation'
+import useForm from '../forms/useForm'
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //loading Razorpay Webpage
 function loadScript(src) {
   return new Promise((resolve) => {
-    const script = document.createElement("script");
-    script.src = src;
+    const script = document.createElement('script')
+    script.src = src
     script.onload = () => {
-      resolve(true);
-    };
+      resolve(true)
+    }
     script.onerror = () => {
-      resolve(false);
-    };
-    document.body.appendChild(script);
-  });
+      resolve(false)
+    }
+    document.body.appendChild(script)
+  })
 }
 
-const __DEV__ = document.domain === "localhost";
+const __DEV__ = document.domain === 'localhost'
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //randomId Generator
 const getRandomId = (min = 0, max = 500000) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  const num = Math.floor(Math.random() * (max - min + 1)) + min;
-  return num.toString().padStart(4, "0");
-};
-const randomNumber = getRandomId();
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  const num = Math.floor(Math.random() * (max - min + 1)) + min
+  return num.toString().padStart(4, '0')
+}
+const randomNumber = getRandomId()
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //randomId Generator
 
 function uniqueId(stringLength, possible) {
-  stringLength = stringLength || 10;
-  possible = possible || "ABCDEFGHJKMNPQRSTUXY";
-  var text = "";
+  stringLength = stringLength || 10
+  possible = possible || 'ABCDEFGHJKMNPQRSTUXY'
+  var text = ''
 
   for (var i = 0; i < stringLength; i++) {
-    var character = getCharacter(possible);
+    var character = getCharacter(possible)
     while (text.length > 0 && character === text.substr(-1)) {
-      character = getCharacter(possible);
+      character = getCharacter(possible)
     }
-    text += character;
+    text += character
   }
 
-  return text;
+  return text
 }
 
 function getCharacter(possible) {
-  return possible.charAt(Math.floor(Math.random() * possible.length));
+  return possible.charAt(Math.floor(Math.random() * possible.length))
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //main function
 function FlightBook() {
-  const { id } = useParams();
-  const username = localStorage.getItem("username");
-  const email = localStorage.getItem("email");
-  const backEndTokenBooking = localStorage.getItem("backEndTokenBooking");
+  const { id } = useParams()
+  const username = localStorage.getItem('username')
+  const email = localStorage.getItem('email')
+  const backEndTokenBooking = localStorage.getItem('backEndTokenBooking')
 
-  const history = useHistory();
-  const [flight, setFlight] = useState({});
-  const [passengerList, setPassengerList] = useState([]);
-  const [passengerId, setPassengerId] = useState(1);
+  const history = useHistory()
+  const [flight, setFlight] = useState({})
+  const [passengerList, setPassengerList] = useState([])
+  const [passengerId, setPassengerId] = useState(1)
+
+  const [coupon, setCoupon] = useState('')
+  const [discount, setDiscount] = useState({})
+  const [totalAmount, setTotalAmount] = useState(0)
 
   //Passenger form Validation
   const { values, errors, handleChange, handleSubmit } = useForm(
     callback,
-    validate
-  );
+    validate,
+  )
 
   //useEffect
   useEffect(() => {
     FlightService.getSelectedFlight(id, backEndTokenBooking)
       .then((response) => {
         if (response.data) {
-          setFlight(response.data);
+          setFlight(response.data)
         }
       })
-      .catch((error) => console.error(`Error :  ${error}`));
-  }, [id, backEndTokenBooking]);
+      .catch((error) => console.error(`Error :  ${error}`))
+  }, [id, backEndTokenBooking])
 
-  const randomPnr = uniqueId();
+  const randomPnr = uniqueId()
 
   // .......................................................................
   //book flight
   const bookFlight = (response) => {
-    console.log(response);
+    console.log(response)
 
     let booking = {
       id:
         flight.id +
-        "-" +
+        '-' +
         flight.airline.airlineName.trim() +
-        "-" +
+        '-' +
         randomNumber,
       pnrNo: randomPnr,
       flight: flight,
@@ -109,13 +113,13 @@ function FlightBook() {
       date: new Date().toLocaleString(),
       active: true,
       email: email,
-    };
-    console.log(booking);
+    }
+    console.log(booking)
 
     // .......................................................................
     //Save payment details to database
     axios
-      .post("http://localhost:3002/addPayment", {
+      .post('http://localhost:3002/addPayment', {
         paymentid: response.razorpay_payment_id,
         orderid: response.razorpay_order_id,
         signature: response.razorpay_signature,
@@ -125,9 +129,9 @@ function FlightBook() {
         email: email,
       })
       .then((response) => {
-        console.log(response);
+        console.log(response)
       })
-      .catch((error) => console.error(`Error :  ${error}`));
+      .catch((error) => console.error(`Error :  ${error}`))
 
     // .......................................................................
     //Save bookig details to database
@@ -135,15 +139,15 @@ function FlightBook() {
       .then((response) => {
         history.push(
           `/acknowledgment/${
-            flight.id + "-" + flight.airline.airlineName + "-" + randomNumber
-          }`
-        );
+            flight.id + '-' + flight.airline.airlineName + '-' + randomNumber
+          }`,
+        )
       })
-      .catch((error) => console.error(`Error :  ${error}`));
-  };
+      .catch((error) => console.error(`Error :  ${error}`))
+  }
 
   function callback() {
-    console.log("callback called");
+    console.log('callback called')
   }
 
   //---------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -152,39 +156,37 @@ function FlightBook() {
     //userdata
     const info = {
       fare: flight.fare.flightFare * passengerList.length,
-    };
-
-    const res = await loadScript(
-      "https://checkout.razorpay.com/v1/checkout.js"
-    );
-
-    if (!res) {
-      alert("Razorpay SDK failed to load. Are you online?");
-      return;
     }
 
-    const data = await fetch("http://localhost:3002/razorpay", {
-      method: "POST",
+    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js')
+
+    if (!res) {
+      alert('Razorpay SDK failed to load. Are you online?')
+      return
+    }
+
+    const data = await fetch('http://localhost:3002/razorpay', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(info),
-    }).then((t) => t.json());
+    }).then((t) => t.json())
 
-    console.log(data);
+    console.log(data)
 
     const options = {
-      key: __DEV__ ? "rzp_test_3qpMwKLiYT1YtE" : "PRODUCTION_KEY",
+      key: __DEV__ ? 'rzp_test_WgIwXnjYkZbPXA' : 'PRODUCTION_KEY',
       currency: data.currency,
       amount: data.amount.toString(),
       order_id: data.id,
       name: flight.id,
       description: flight.airline.airlineName,
       image:
-        "https://e7.pngegg.com/pngimages/953/550/png-clipart-pictogram-airplane-wikipedia-information-computer-icons-aircraft-icon-blue-logo.png",
+        'https://e7.pngegg.com/pngimages/953/550/png-clipart-pictogram-airplane-wikipedia-information-computer-icons-aircraft-icon-blue-logo.png',
       handler: function (response) {
         if (response.razorpay_payment_id) {
-          bookFlight(response);
+          bookFlight(response)
         }
         // alert(response.razorpay_payment_id);
         // alert(response.razorpay_order_id);
@@ -192,18 +194,18 @@ function FlightBook() {
       },
       prefill: {
         name: username,
-        email: "alfayeed@flights.com",
-        phone_number: "9900909090",
+        email: 'alfayeed@flights.com',
+        phone_number: '9900909090',
       },
-    };
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
+    }
+    const paymentObject = new window.Razorpay(options)
+    paymentObject.open()
   }
 
   // .......................................................................
   //Add Passenger
   const addPassenger = () => {
-    const errors = validate(values);
+    const errors = validate(values)
     if (Object.keys(errors).length === 0) {
       let passenger = {
         id: passengerId,
@@ -212,31 +214,86 @@ function FlightBook() {
         lastName: values.lastname,
         age: values.age,
         gender: values.gender,
-        seatNo: "null",
-      };
-      setPassengerId(passengerId + 1);
-      setPassengerList([...passengerList, passenger]);
+        seatNo: 'null',
+      }
+      setPassengerId(passengerId + 1)
+      setPassengerList([...passengerList, passenger])
+      setTotalAmount(calculateTotal(passengerList.length + 1))
     }
-  };
+  }
 
   // .......................................................................
   //Delete Passenger
   const deletePassenger = (passengerId) => {
     setPassengerList(
-      passengerList.filter((passenger) => passenger.id !== passengerId)
-    );
-  };
+      passengerList.filter((passenger) => passenger.id !== passengerId),
+    )
+    setTotalAmount(calculateTotal(passengerList.length - 1))
+  }
+
+  //---------------------------------------------------------------------------------------------------------------------------------------------------------------
+  // Total Amount Calculation
+
+  const calculateTotal = (value) => {
+    let amount = 0
+    if (discount.discount !== 0 && discount.discount !== undefined) {
+      amount =
+        flight.fare.flightFare * value -
+        (flight.fare.flightFare * value * discount.discount) / 100
+      console.log(amount)
+      return amount
+    } else {
+      amount = flight.fare.flightFare * value
+      return amount
+    }
+  }
+
+  //---------------------------------------------------------------------------------------------------------------------------------------------------------------
+  // Discount
+
+  const handleDiscountChange = (e) => {
+    setCoupon(e.target.value)
+    console.log(e.target.value)
+  }
+
+  const getDiscount = () => {
+    const myDiscount = {
+      code: coupon,
+      price: flight.fare.flightFare * passengerList.length,
+    }
+    FlightService.getDiscount(myDiscount, backEndTokenBooking)
+      .then((response) => {
+        if (response.data) {
+          console.log(response.data)
+          setDiscount(response.data)
+          setTotalAmount(
+            flight.fare.flightFare * passengerList.length -
+              (flight.fare.flightFare *
+                passengerList.length *
+                response.data.discount) /
+                100,
+          )
+        }
+      })
+      .catch((error) => console.error(`Error :  ${error}`))
+  }
+
+  const removeDiscount = () => {
+    setDiscount({})
+    setTotalAmount(flight.fare.flightFare * passengerList.length)
+  }
+
   //---------------------------------------------------------------------------------------------------------------------------------------------------------------
   // Handle Change
   const handleChangeInput = (id, event) => {
     const newPassengers = passengerList.map((i) => {
       if (id === i.id) {
-        i[event.target.name] = event.target.value;
+        i[event.target.name] = event.target.value
       }
-      return i;
-    });
-    setPassengerList(newPassengers);
-  };
+      return i
+    })
+    setPassengerList(newPassengers)
+  }
   //---------------------------------------------------------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------------------------------------------------------------------------------------------------------
   return (
@@ -251,7 +308,7 @@ function FlightBook() {
               <h3>
                 <div className="cardsFlight text-center">
                   <div className="col-sm">
-                    {" "}
+                    {' '}
                     <span>{flight.departureTime}</span>
                     <br />
                     {flight.departureAirport.airportName}
@@ -262,28 +319,26 @@ function FlightBook() {
                     </svg>
                   </div>
                   <div className="col-sm">
-                    {" "}
+                    {' '}
                     <span>{flight.arrivalTime}</span>
                     <br />
                     {flight.destinationAirport.airportName}
                   </div>
 
                   <div className="col-sm">
-                    <span>{"Departure Date"}</span>
+                    <span>{'Departure Date'}</span>
                     <br />
                     {flight.departureDate}
                   </div>
 
                   <div className="col-sm">
-                    <span>{"Arrival Date"}</span>
+                    <span>{'Arrival Date'}</span>
                     <br />
                     {flight.arrivalDate}
                   </div>
 
                   <div className="col-sm">
-                    <h2>
-                      {"\u20B9" + flight.fare.flightFare * passengerList.length}
-                    </h2>
+                    <h2>{'\u20B9' + totalAmount}</h2>
                   </div>
                 </div>
               </h3>
@@ -304,9 +359,9 @@ function FlightBook() {
                       type="text"
                       className="form-control"
                       name="firstName"
-                      value={passenger.firstName || ""}
+                      value={passenger.firstName || ''}
                       onChange={(e) => {
-                        handleChangeInput(passenger.id, e);
+                        handleChangeInput(passenger.id, e)
                       }}
                     ></input>
                   </div>
@@ -318,9 +373,9 @@ function FlightBook() {
                       placeholder="Middle Name"
                       name="middleName"
                       className="form-control"
-                      value={passenger.middleName || " "}
+                      value={passenger.middleName || ' '}
                       onChange={(e) => {
-                        handleChangeInput(passenger.id, e);
+                        handleChangeInput(passenger.id, e)
                       }}
                     />
                   </div>
@@ -332,9 +387,9 @@ function FlightBook() {
                       placeholder="Last Name"
                       name="lastName"
                       className="form-control"
-                      value={passenger.lastName || ""}
+                      value={passenger.lastName || ''}
                       onChange={(e) => {
-                        handleChangeInput(passenger.id, e);
+                        handleChangeInput(passenger.id, e)
                       }}
                     />
                   </div>
@@ -347,9 +402,9 @@ function FlightBook() {
                       placeholder="Age"
                       name="age"
                       className="form-control"
-                      value={passenger.age || ""}
+                      value={passenger.age || ''}
                       onChange={(e) => {
-                        handleChangeInput(passenger.id, e);
+                        handleChangeInput(passenger.id, e)
                       }}
                     />
                   </div>
@@ -359,14 +414,14 @@ function FlightBook() {
                     <select
                       className="form-control"
                       name="gender"
-                      value={passenger.gender || ""}
+                      value={passenger.gender || ''}
                       onChange={(e) => {
-                        handleChangeInput(passenger.id, e);
+                        handleChangeInput(passenger.id, e)
                       }}
                     >
                       <option
                         placeholder="Prefer not to say"
-                        value={"Prefer not to say"}
+                        value={'Prefer not to say'}
                       >
                         -
                       </option>
@@ -395,7 +450,7 @@ function FlightBook() {
         <div className="containerPassenger">
           <div className="upperPassenger">
             <form
-              className="row align-items-end"
+              className="row align-items-start"
               onSubmit={handleSubmit}
               noValidate
             >
@@ -404,11 +459,11 @@ function FlightBook() {
 
                 <input
                   autoComplete="off"
-                  className={`input ${errors.firstname && "is-danger"}`}
+                  className={`input ${errors.firstname && 'is-danger'}`}
                   type="text"
                   name="firstname"
                   onChange={handleChange}
-                  value={values.firstname || ""}
+                  value={values.firstname || ''}
                   required
                 />
                 {errors.firstname && (
@@ -419,15 +474,15 @@ function FlightBook() {
               <div className="col-sm">
                 <label className="label">Middle Name</label>
                 <input
-                  className={`input ${errors.middlename && "is-danger"}`}
+                  className={`input ${errors.middlename && 'is-danger'}`}
                   type="text"
                   name="middlename"
                   onChange={handleChange}
-                  value={values.middlename || ""}
+                  value={values.middlename || ''}
                   required
                 />
                 {Object.keys(errors).length !== 0 && (
-                  <p className="help text-white">{"."}</p>
+                  <p className="help text-white">{'.'}</p>
                 )}
               </div>
 
@@ -435,11 +490,11 @@ function FlightBook() {
                 <label className="label">Last Name</label>
                 <input
                   autoComplete="off"
-                  className={`input ${errors.lastname && "is-danger"}`}
+                  className={`input ${errors.lastname && 'is-danger'}`}
                   type="text"
                   name="lastname"
                   onChange={handleChange}
-                  value={values.lastname || ""}
+                  value={values.lastname || ''}
                   required
                 />
                 {errors.lastname && (
@@ -451,11 +506,11 @@ function FlightBook() {
                 <label className="label">Age</label>
                 <input
                   autoComplete="off"
-                  className={`input ${errors.age && "is-danger"}`}
+                  className={`input ${errors.age && 'is-danger'}`}
                   type="number"
                   name="age"
                   onChange={handleChange}
-                  value={values.age || ""}
+                  value={values.age || ''}
                   required
                 />
                 {errors.age && <p className="help is-danger">{errors.age}</p>}
@@ -465,15 +520,15 @@ function FlightBook() {
                 <label className="label">Gender</label>
                 <select
                   autoComplete="off"
-                  className={`input ${errors.gender && "is-danger"}`}
+                  className={`input ${errors.gender && 'is-danger'}`}
                   name="gender"
                   onChange={handleChange}
-                  value={values.gender || ""}
+                  value={values.gender || ''}
                   required
                 >
                   <option
                     placeholder="Prefer not to say"
-                    value={"Prefer not to say"}
+                    value={'Prefer not to say'}
                   >
                     -
                   </option>
@@ -482,10 +537,11 @@ function FlightBook() {
                   <option value="Others">Others</option>
                 </select>
                 {Object.keys(errors).length !== 0 && (
-                  <p className="help text-white">{"."}</p>
+                  <p className="help text-white">{'.'}</p>
                 )}
               </div>
               <div className="col-sm">
+                <label className="text-white"> . </label>
                 <button
                   type="submit"
                   className="btn-block secondary-button is-info button cursor-pointer bold"
@@ -494,39 +550,83 @@ function FlightBook() {
                   Add
                 </button>
                 {Object.keys(errors).length !== 0 && (
-                  <p className="help text-white">{"."}</p>
+                  <p className="help text-white">{'.'}</p>
                 )}
               </div>
             </form>
           </div>
         </div>
       ) : null}
+      {(passengerList.length >= 1 && discount.discount === undefined) ||
+      discount.discount === 0 ? (
+        <div className="container">
+          <div className="column is-4 is-offset-4">
+            <label className="label text-white">Coupon Code</label>
+            <input
+              type="text"
+              className="form-control"
+              value={coupon || ''}
+              onChange={(e) => {
+                handleDiscountChange(e)
+              }}
+            />
+            {discount.discount !== undefined && discount.discount === 0 && (
+              <p className="help is-danger">Invalid coupon code</p>
+            )}
+            <Button
+              className="btn btn-info text-center"
+              id="submit"
+              onClick={getDiscount}
+              block
+            >
+              Apply
+            </Button>
+          </div>
+        </div>
+      ) : null}
+
+      {passengerList.length >= 1 &&
+      discount.discount !== undefined &&
+      discount.discount !== 0 ? (
+        <div className="container">
+          <div className="column is-4 is-offset-4">
+            <label className="label text-white">Coupon Code</label>
+            <input
+              type="text"
+              className="form-control"
+              value={coupon || ''}
+              onChange={(e) => {
+                handleDiscountChange(e)
+              }}
+            ></input>
+            <Button
+              className="btn btn-info text-center"
+              id="submit"
+              onClick={removeDiscount}
+              block
+            >
+              Remove
+            </Button>
+          </div>
+        </div>
+      ) : null}
+
       {passengerList.length >= 1 ? (
-        <div className="section is-fullheight">
-          <div className="container">
-            <div className="column is-4 is-offset-4">
-              <Button
-                className="btn btn-success text-center"
-                id="submit"
-                onClick={displayRazorpay}
-                block
-              >
-                Pay
-              </Button>
-              {/* <Button
-                className="btn btn-success text-center"
-                id="submit"
-                onClick={bookFlight}
-                block
-              >
-                Pay
-              </Button> */}
-            </div>
+        <div className="container">
+          <div className="column is-4 is-offset-4">
+            <Button
+              className="btn btn-success text-center"
+              id="submit"
+              onClick={displayRazorpay}
+              block
+            >
+              Pay
+            </Button>
           </div>
         </div>
       ) : null}
     </div>
-  );
+  )
 }
 
-export default FlightBook;
+export default FlightBook

@@ -3,6 +3,7 @@ package com.cg.casestudy.bookingmanagement.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.kie.api.runtime.KieSession;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -10,15 +11,16 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.cg.casestudy.bookingmanagement.config.RabbitMQConfig;
 import com.cg.casestudy.bookingmanagement.exception.BookingNotFoundException;
 import com.cg.casestudy.bookingmanagement.exception.IdNotFoundException;
 import com.cg.casestudy.bookingmanagement.model.AuthRequest;
 import com.cg.casestudy.bookingmanagement.model.Booking;
 import com.cg.casestudy.bookingmanagement.model.CheckIn;
+import com.cg.casestudy.bookingmanagement.model.Discount;
 import com.cg.casestudy.bookingmanagement.model.Flight;
 import com.cg.casestudy.bookingmanagement.repository.BookingManagementRepository;
 
@@ -37,6 +39,17 @@ public class BookingManagementServiceImpl implements BookingManagementService {
 	@Autowired
 	@Lazy
 	private RestTemplate restTemplate;
+
+	@Autowired
+	private KieSession session;
+	
+	@Autowired
+	private KafkaTemplate<String, Object> template;
+	
+
+	private final String TOPIC_POST = "booking-topic-post";
+	private final String TOPIC_PUT = "booking-topic-put";
+	private final String TOPIC_DELETE = "booking-topic-delete";
 
 //	// (space between '$' and '{' is important)
 //	@Value("$ {microservice.flight-management.endpoints.endpoint.uri}")
@@ -103,12 +116,14 @@ public class BookingManagementServiceImpl implements BookingManagementService {
 
 		Flight flight = booking.getFlight();
 		flight.setSeats(flight.getSeats() - booking.getPassengerList().size());
-		System.out.println(flight);
 
 		booking.setFlight(flight);
 
-		// Producer
-		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.POST_ROUTING_KEY, booking);
+		// Producer RabbitMQ
+//		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.POST_ROUTING_KEY, booking);
+		// Producer Kafka
+		template.send(TOPIC_POST, booking);
+		System.out.println(booking);
 
 //		bookingManagementRepository.save(booking);
 
@@ -160,10 +175,12 @@ public class BookingManagementServiceImpl implements BookingManagementService {
 	// Updating 'Booking' to database using BookingManagementReopsitory
 	@Override
 	public String updateBooking(Booking booking) {
-		
+
 		// Producer
-				rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.PUT_ROUTING_KEY, booking);
-				
+//		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.PUT_ROUTING_KEY, booking);
+		// Producer Kafka
+		template.send(TOPIC_PUT, booking);
+
 //		bookingManagementRepository.save(booking);
 
 		CheckIn checkIn = new CheckIn(booking.getId(), booking.getPnrNo(), booking.getEmail(),
@@ -198,10 +215,12 @@ public class BookingManagementServiceImpl implements BookingManagementService {
 	@Override
 	public String deleteBooking(String bookingId) {
 		if (bookingManagementRepository.existsById(bookingId)) {
-			
+
 			// Producer
-			rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.DELETE_ROUTING_KEY, bookingId);
-			
+//			rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.DELETE_ROUTING_KEY, bookingId);
+			// Producer Kafka
+			template.send(TOPIC_DELETE, bookingId);
+
 //			bookingManagementRepository.deleteById(bookingId);
 			try {
 
@@ -230,5 +249,13 @@ public class BookingManagementServiceImpl implements BookingManagementService {
 			throw new IdNotFoundException("Id not exist");
 		}
 
+	}
+
+	@Override
+	public Discount discount(Discount discount) {
+		session.insert(discount);
+		session.fireAllRules();
+		System.out.println(discount.toString());
+		return discount;
 	}
 }

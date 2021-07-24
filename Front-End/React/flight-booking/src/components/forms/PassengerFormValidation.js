@@ -13,7 +13,7 @@ export default function validate(values) {
   }
   if (!values.age) {
     errors.age = "Age is required";
-  } else if (values.age < 5 || values > 120) {
+  } else if (values.age < 5 || values.age > 120) {
     errors.age = "Age must be between 5 and 120";
   }
   return errors;

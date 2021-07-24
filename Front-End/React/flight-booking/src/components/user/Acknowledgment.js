@@ -60,7 +60,7 @@ function Acknowledgment() {
 
               <div className="col-sm">
                 <label> Date </label>
-                <p>{new Date().toLocaleString()}</p>
+                <p>{payment.date}</p>
               </div>
 
               <div className="col-sm">

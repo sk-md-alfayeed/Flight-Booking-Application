@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cg.casestudy.bookingmanagement.model.AuthRequest;
 import com.cg.casestudy.bookingmanagement.model.Booking;
+import com.cg.casestudy.bookingmanagement.model.Discount;
 import com.cg.casestudy.bookingmanagement.model.Flight;
 import com.cg.casestudy.bookingmanagement.service.BookingManagementService;
 import com.cg.casestudy.bookingmanagement.util.JwtUtil;
@@ -98,6 +99,13 @@ public class BookingManagementController {
 	@DeleteMapping("/deleteBooking/{bookingId}")
 	public ResponseEntity<String> deleteBooking(@PathVariable String bookingId) {
 		return ResponseEntity.ok(bookingManagementService.deleteBooking(bookingId));
+	}
+
+	// Getting REST POST request and returning 'Discount Object' from
+	// BookingManagementService
+	@PostMapping("/discount")
+	public ResponseEntity<Discount> discount(@RequestBody Discount discount) {
+		return ResponseEntity.ok(bookingManagementService.discount(discount));
 	}
 
 }

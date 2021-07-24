@@ -1,0 +1,26 @@
+package KieRule;
+import com.cg.casestudy.bookingmanagement.model.Discount;
+
+rule "DIWALI"
+
+when
+discountObject : Discount(code=="DIWALI" && price>4000);
+then
+discountObject.setDiscount(10);
+end;
+
+rule "CHRISTMAS"
+
+when
+discountObject : Discount(code=="CHRISTMAS" && price>4000);
+then
+discountObject.setDiscount(12);
+end;
+
+rule "NEWYEAR"
+
+when
+discountObject : Discount(code=="NEWYEAR" && price>4000);
+then
+discountObject.setDiscount(15);
+end;

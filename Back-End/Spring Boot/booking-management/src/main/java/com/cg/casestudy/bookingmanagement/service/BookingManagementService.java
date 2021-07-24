@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.cg.casestudy.bookingmanagement.exception.BookingNotFoundException;
 import com.cg.casestudy.bookingmanagement.exception.IdNotFoundException;
 import com.cg.casestudy.bookingmanagement.model.Booking;
+import com.cg.casestudy.bookingmanagement.model.Discount;
 import com.cg.casestudy.bookingmanagement.model.Flight;
 
 @Service
@@ -25,6 +26,8 @@ public interface BookingManagementService {
 
 	public String updateBooking(Booking booking);
 
-	public String deleteBooking(String bookingId) throws IdNotFoundException;;
+	public String deleteBooking(String bookingId) throws IdNotFoundException;
+
+	public Discount discount(Discount discount);
 
 }
